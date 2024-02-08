@@ -16,10 +16,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Cache dependencies
+      - name: Cache
         uses: actions/cache@v4
         with:
-          path: /path/to/your/dependencies
+          path: ~/.cache/bazel  
           key: bazel-${{ runner.workspace }}-${{ hashFiles('WORKSPACE.bazel') }}
 
       - name: Build
