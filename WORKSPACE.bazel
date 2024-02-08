@@ -45,12 +45,17 @@ http_archive(
     build_file_content = """
 package(default_visibility = ["//visibility:public"])
 filegroup(
-    name = "all_files",
-    srcs = glob(["**/*.c", "**/*.h"]),
+    name = "all_sources",
+    srcs = glob(
+        ["**/*.c", "**/*.h"],
+        exclude = [
+            "src/luac.c",
+        ]
+    ),
 )
 cc_library(
     name = "lua54",
-    srcs = [":all_files"],
+    srcs = [":all_sources"],
 )
 """
 )
