@@ -15,6 +15,14 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+        - name: Cache dependencies
+          uses: actions/cache@v2
+          with:
+            path: /path/to/your/dependencies
+            key: $bazel-{{ runner.workspace }}-{{ hashFiles('WORKSPACE.bazel') }}
+
+        - name: Build
+          run: bazel build //...
 
       - name: Build
         run: bazel build //...
