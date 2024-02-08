@@ -24,3 +24,6 @@ jobs:
 
       - name: Build
         run: bazel build //...
+
+      - name: Test execution
+        run: bazel run //mlua_example:mlua_example
