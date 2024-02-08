@@ -1,0 +1,56 @@
+load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
+
+http_archive(
+    name = "rules_rust",
+    sha256 = "a761d54e49db06f863468e6bba4a13252b1bd499e8f706da65e279b3bcbc5c52",
+    urls = ["https://github.com/bazelbuild/rules_rust/releases/download/0.36.2/rules_rust-v0.36.2.tar.gz"],
+)
+load("@rules_rust//rust:repositories.bzl", "rules_rust_dependencies", "rust_register_toolchains")
+
+rules_rust_dependencies()
+
+rust_register_toolchains(edition = "2021")
+
+load("@rules_rust//crate_universe:repositories.bzl", "crate_universe_dependencies")
+
+crate_universe_dependencies()
+
+load("@rules_rust//crate_universe:defs.bzl", "crates_repository", "crate")
+
+crates_repository(
+    name = "crate_index",
+    cargo_lockfile = "//:Cargo.lock",
+    manifests = [
+        "//:Cargo.toml",
+        "//mlua_example:Cargo.toml",
+    ],
+    annotations = {
+        "mlua-sys": [crate.annotation(
+            build_script_env = {
+                "LUA_LIB": "external/lua54/liblua54.a",
+                "LUA_LIB_NAME": "lua54",
+            },
+            deps = ["@lua54//:lua54"],
+        )],
+    }
+)
+
+load("@crate_index//:defs.bzl", "crate_repositories")
+
+crate_repositories()
+
+http_archive(
+    name = "lua54",
+    urls = [ "https://www.lua.org/ftp/lua-5.4.6.tar.gz" ],
+    build_file_content = """
+package(default_visibility = ["//visibility:public"])
+filegroup(
+    name = "all_files",
+    srcs = glob(["**/*.c", "**/*.h"]),
+)
+cc_library(
+    name = "lua54",
+    srcs = [":all_files"],
+)
+"""
+)
