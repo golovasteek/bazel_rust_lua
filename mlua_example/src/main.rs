@@ -1,3 +1,7 @@
+/// This example is fully copied from the mlua documentation
+/// published under the MIT License
+/// 
+/// https://github.com/mlua-rs/mlua/tree/3ca7b4942ed6ccad816883a2a88582705916c917
 use mlua::prelude::*;
 
 fn main() -> LuaResult<()> {
